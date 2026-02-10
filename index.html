@@ -3,397 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOOSKA-P // SYSTÈME CENTRAL</title>
+    <title>BOOSKA-P // M. FADEL</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;500;700&family=Courier+Prime&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --booska-yellow: #FFD700;
-            --alert-red: #D80000;
-            --void-black: #080808;
+            --void-black: #050505;
+            --matrix-glow: rgba(255, 215, 0, 0.15);
             --hacker-green: #0f0;
-            --glass: rgba(255, 255, 255, 0.05);
+            --text-gray: #a0a0a0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            cursor: none; 
         }
 
         body {
             background-color: var(--void-black);
             color: white;
-            font-family: 'Courier Prime', monospace;
+            font-family: 'Space Mono', monospace;
             overflow-x: hidden;
+            height: 100vh;
         }
 
-        body::after {
-            content: "";
+        .crt-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            z-index: 999;
-        }
-
-        .admin-panel {
-            background: var(--alert-red);
             width: 100%;
-            padding: 15px;
-            text-align: center;
-            font-family: 'Teko', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            position: fixed;
-            top: 0;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
             z-index: 1000;
-            border-bottom: 4px solid var(--booska-yellow);
-            box-shadow: 0 5px 30px rgba(216, 0, 0, 0.6);
-            animation: warning-flash 2s infinite;
         }
 
-        @keyframes warning-flash {
-            0%, 100% { opacity: 1; text-shadow: 0 0 10px black; }
-            50% { opacity: 0.9; text-shadow: 0 0 20px white; }
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 1001;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,215,0,0.05) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: fixed;
+            bottom: 100%;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--booska-yellow);
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #custom-cursor::after {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: var(--booska-yellow);
         }
 
         .hero {
-            height: 90vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
             position: relative;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 70%);
-            margin-top: 60px;
-            border-bottom: 2px solid var(--booska-yellow);
+            perspective: 1000px;
         }
 
         .booska-logo {
             font-family: 'Teko', sans-serif;
-            font-size: 15vw;
-            line-height: 0.8;
+            font-size: 12vw;
             font-weight: 700;
-            color: transparent;
-            -webkit-text-stroke: 4px var(--booska-yellow);
+            color: white;
             text-transform: uppercase;
+            letter-spacing: -5px;
             position: relative;
-            z-index: 2;
+            z-index: 10;
+            mix-blend-mode: difference;
         }
 
         .booska-logo span {
             color: var(--booska-yellow);
-            -webkit-text-stroke: 0px;
         }
 
-        .hero-sub {
-            font-size: 1.2rem;
-            margin-top: 20px;
+        .fadel-profile {
+            position: relative;
+            margin-top: -30px;
+            padding: 40px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            clip-path: polygon(0 0, 95% 0, 100% 20%, 100% 100%, 5% 100%, 0 80%);
+            animation: panel-appear 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        @keyframes panel-appear {
+            from { opacity: 0; transform: translateY(50px) rotateX(-20deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+
+        .role-tag {
             background: var(--booska-yellow);
             color: black;
-            padding: 5px 20px;
             font-weight: bold;
-            transform: skewX(-20deg);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 100px 20px;
-        }
-
-        .section-header {
-            font-family: 'Teko', sans-serif;
-            font-size: 4rem;
-            text-transform: uppercase;
-            border-left: 10px solid var(--booska-yellow);
-            padding-left: 30px;
-            margin-bottom: 60px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .artist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .dossier {
-            background: #111;
-            border: 1px solid #333;
-            position: relative;
-            overflow: hidden;
-            transition: 0.4s ease;
-        }
-
-        .dossier:hover {
-            border-color: var(--booska-yellow);
-            transform: translateY(-10px);
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.1);
-        }
-
-        .dossier-img-box {
-            height: 350px;
-            width: 100%;
-            position: relative;
-        }
-
-        .dossier-img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: grayscale(100%);
-            transition: 0.4s;
-        }
-
-        .dossier:hover .dossier-img-box img {
-            filter: grayscale(0%) contrast(1.1);
-        }
-
-        .overlay-stat {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: black;
-            color: var(--booska-yellow);
-            padding: 5px 10px;
+            display: inline-block;
+            padding: 2px 10px;
             font-size: 0.8rem;
-            border: 1px solid var(--booska-yellow);
-        }
-
-        .dossier-content {
-            padding: 20px;
-            border-top: 4px solid var(--booska-yellow);
-        }
-
-        .dossier-title {
-            font-family: 'Teko', sans-serif;
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            line-height: 1;
             margin-bottom: 10px;
         }
 
-        .stat-line {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: #888;
-            border-bottom: 1px dashed #333;
-            padding: 5px 0;
-        }
-
-        .stat-line span.val {
-            color: white;
-            font-weight: bold;
-        }
-
-        .marquee-container {
-            background: var(--booska-yellow);
-            color: black;
-            padding: 10px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            transform: rotate(-2deg) scale(1.1);
-            margin: 50px 0;
-            border-top: 5px solid black;
-            border-bottom: 5px solid black;
-        }
-
-        .marquee-content {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
+        .name-title {
             font-family: 'Teko', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
+            font-size: 3.5rem;
+            line-height: 0.9;
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .bio-text {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border-left: 2px solid var(--booska-yellow);
+            padding-left: 15px;
         }
 
-        footer {
-            border-top: 1px solid #333;
-            padding: 50px;
-            text-align: center;
-            color: #555;
-            font-size: 0.8rem;
+        .data-grid {
+            position: absolute;
+            top: 20%;
+            left: 5%;
+            font-size: 0.6rem;
+            color: var(--hacker-green);
+            opacity: 0.4;
+            pointer-events: none;
         }
 
-        .glitch-text:hover {
-            animation: glitch-anim 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-            color: var(--booska-yellow);
+        .side-bar {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 100;
         }
+
+        .nav-item {
+            width: 40px;
+            height: 2px;
+            background: rgba(255,255,255,0.2);
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            width: 60px;
+            background: var(--booska-yellow);
+            box-shadow: 0 0 10px var(--booska-yellow);
+        }
+
+        .terminal-box {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            font-size: 0.7rem;
+            color: var(--hacker-green);
+            max-width: 300px;
+        }
+
+        .glitch {
+            position: relative;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--void-black);
+        }
+        .glitch::before { left: 2px; text-shadow: -2px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch::after { left: -2px; text-shadow: -2px 0 #00fff9; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
 
         @keyframes glitch-anim {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
+            0% { clip: rect(10px, 9999px, 20px, 0); }
+            20% { clip: rect(80px, 9999px, 90px, 0); }
+            100% { clip: rect(40px, 9999px, 50px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(60px, 9999px, 70px, 0); }
+            100% { clip: rect(10px, 9999px, 25px, 0); }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="admin-panel">
-        ⚠️ SITE DE DÉMO : D2LC / dan.bouillet.14@gmail.com ⚠️
+    <div class="crt-overlay"></div>
+    <div class="scanline"></div>
+    <div id="custom-cursor"></div>
+
+    <div class="data-grid">
+        [SYSTEM_LOG: BOOSKA-P]<br>
+        IP: 192.168.1.77<br>
+        STATUS: ENCRYPTED<br>
+        NODE: EXECUTIVE_LEVEL_4
     </div>
 
-    <header class="hero">
-        <div class="booska-logo">BOOSKA-<span>P</span></div>
-        <div class="hero-sub">L'INFLUENCE URBAINE // SYSTÈME V.2077</div>
-        <p style="margin-top: 30px; letter-spacing: 5px; opacity: 0.7;">INITIALISATION DU PROTOCOLE...</p>
-    </header>
+    <div class="side-bar">
+        <div class="nav-item"></div>
+        <div class="nav-item"></div>
+        <div class="nav-item" style="background: var(--booska-yellow); width: 60px;"></div>
+        <div class="nav-item"></div>
+    </div>
 
-    <div class="marquee-container">
-        <div class="marquee-content">
-            // BOOSKA-P // LE RAP FRANÇAIS NE DORT JAMAIS // 11 MINUTES // BOOSKA FREESTYLE // WESH LA FAMILLE // NOUVEAU CLIP DISPONIBLE // CERTIFIÉ VALIDÉ // LA RUE C'EST NOUS // 
-            // BOOSKA-P // LE RAP FRANÇAIS NE DORT JAMAIS // 11 MINUTES // BOOSKA FREESTYLE // WESH LA FAMILLE // NOUVEAU CLIP DISPONIBLE // CERTIFIÉ VALIDÉ // LA RUE C'EST NOUS //
+    <main class="hero">
+        <h1 class="booska-logo glitch" data-text="BOOSKA-P">BOOSKA-<span>P</span></h1>
+        
+        <div class="fadel-profile">
+            <span class="role-tag">MANAGEMENT & STRATÉGIE</span>
+            <h2 class="name-title" id="scramble-target">MOHAMED FADEL</h2>
+            <div class="bio-text">
+                Visionnaire opérationnel et pilier du <strong>Système Booska-P</strong>. 
+                Spécialiste du développement des talents et de l'expansion média. 
+                Mohamed Fadel orchestre les synergies entre la rue et l'industrie pour maintenir 
+                l'hégémonie de l'influence urbaine.
+            </div>
+            <div style="margin-top: 20px; font-size: 0.7rem; letter-spacing: 2px; color: var(--booska-yellow);">
+                // ACCÈS AUTORISÉ // ARCHIVE_042
+            </div>
         </div>
+    </main>
+
+    <div class="terminal-box">
+        <p>> root@booska_server: loading_assets...</p>
+        <p>> authentication: <span style="color:white">M_FADEL_CONFIRMED</span></p>
+        <p>> connection: stable [100%]</p>
+        <p id="typer-line">_</p>
     </div>
-
-    <div class="container">
-        <div class="section-header">
-            <span>ARTISTES_AFFILIÉS</span>
-            <span style="font-size: 1rem; letter-spacing: 2px;">BASE_DE_DONNÉES_CRYPTÉE</span>
-        </div>
-
-        <div class="artist-grid">
-            
-            <div class="dossier">
-                <div class="dossier-img-box">
-                    <img src="https://cdn-images.dzcdn.net/images/artist/7601c5c0e2bd16cb585898316fd0dfec/1900x1900-000000-80-0-0.jpg" alt="Silhouette Rap">
-                    <div class="overlay-stat">RANG : SS</div>
-                </div>
-                <div class="dossier-content">
-                    <h3 class="dossier-title glitch-text">NINHO</h3>
-                    <div class="stat-line">
-                        <span>Origine</span> <span class="val">91 / 77</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Spécialité</span> <span class="val">Hitmaking / Kickage</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Statut</span> <span class="val" style="color:var(--booska-yellow)">RECORDMAN</span>
-                    </div>
-                    <div style="margin-top:15px; font-size: 0.8rem; color: #555;">> NOTE: JEFE DES JEFES. FLUX DE DONNÉES ILLIMITÉ.</div>
-                </div>
-            </div>
-
-            <div class="dossier">
-                <div class="dossier-img-box">
-                    <img src="https://i.scdn.co/image/ab6761610000e5eb610ede8d8f21e7446de28c9a" alt="Ambiance Sombre">
-                    <div class="overlay-stat">RANG : S</div>
-                </div>
-                <div class="dossier-content">
-                    <h3 class="dossier-title glitch-text">LA CHINE</h3>
-                    <div class="stat-line">
-                        <span>Origine</span> <span class="val">95</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Spécialité</span> <span class="val">Cinématique / Flow</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Statut</span> <span class="val" style="color:var(--booska-yellow)">REC.118</span>
-                    </div>
-                    <div style="margin-top:15px; font-size: 0.8rem; color: #555;">> NOTE: MLLR DU 95.</div>
-                </div>
-            </div>
-
-            <div class="dossier">
-                <div class="dossier-img-box">
-                    <img src="https://cdn-images.dzcdn.net/images/artist/54c1dc208f92240e9d56b595708ed284/1900x1900-000000-80-0-0.jpg" alt="Drill">
-                    <div class="overlay-stat">RANG : S+</div>
-                </div>
-                <div class="dossier-content">
-                    <h3 class="dossier-title glitch-text">GAZO</h3>
-                    <div class="stat-line">
-                        <span>Origine</span> <span class="val">93 / St-Denis</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Spécialité</span> <span class="val">Drill FR</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Statut</span> <span class="val" style="color:var(--booska-yellow)">BSB GANG</span>
-                    </div>
-                    <div style="margin-top:15px; font-size: 0.8rem; color: #555;">> NOTE: LA MALA EST GANGX. HEY OLA.</div>
-                </div>
-            </div>
-
-             <div class="dossier">
-                <div class="dossier-img-box">
-                    <img src="https://cdn-images.dzcdn.net/images/artist/0df16db136e7417eeef74988208859c3/1900x1900-000000-80-0-0.jpg" alt="Melody">
-                    <div class="overlay-stat">RANG : A+</div>
-                </div>
-                <div class="dossier-content">
-                    <h3 class="dossier-title glitch-text">TIAKOLA</h3>
-                    <div class="stat-line">
-                        <span>Origine</span> <span class="val">93 / La Courneuve</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Spécialité</span> <span class="val">Mélo / Topline</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Statut</span> <span class="val" style="color:var(--booska-yellow)">MÉLO</span>
-                    </div>
-                    <div style="margin-top:15px; font-size: 0.8rem; color: #555;">> NOTE: LE GARS DE LA MELO. FUTUR MVP.</div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div style="background: black; padding: 50px; border-top: 2px solid var(--booska-yellow); font-family: monospace;">
-        <p style="color: var(--hacker-green);">root@booska-server:~$ check_stats --booska-pefra</p>
-        <p style="color: white;">> ANALYSE EN COURS...</p>
-        <p style="color: white;">> 11 MINUTES : <span style="color:var(--booska-yellow)">CONFIRMÉ</span></p>
-        <p style="color: white;">> INTERVIEWS : <span style="color:var(--booska-yellow)">100% RAW</span></p>
-        <p style="color: white;">> EXCLU : CHARGEMENT DU PROCHAIN BANGER [||||||||||] 99%</p>
-    </div>
-
-    <footer>
-        <p>CONÇU PAR DAN BOUILLET</p>
-        <p style="opacity: 0.5;">Toute reproduction interdite sans l'accord de la Street.</p>
-    </footer>
 
     <script>
-        const dossiers = document.querySelectorAll('.dossier');
-        
-        dossiers.forEach(dossier => {
-            dossier.addEventListener('mouseenter', () => {
-                console.log("ACCÈS DOSSIER : " + dossier.querySelector('h3').innerText);
-                dossier.style.borderColor = "#fff";
-                setTimeout(() => {
-                    dossier.style.borderColor = "#FFD700";
-                }, 100);
-            });
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
 
-        const titles = ["BOOSKA-P", "LA RUE", "LA CULTURE", "LE RAP FR"];
-        let count = 0;
-        const logoSpan = document.querySelector('.booska-logo');
-        
-        setInterval(() => {
-            logoSpan.style.textShadow = "2px 2px 0px red, -2px -2px 0px blue";
-            setTimeout(() => {
-                logoSpan.style.textShadow = "none";
-            }, 100);
-        }, 3000);
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += `<span style="color:var(--booska-yellow)">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
 
+        const el = document.getElementById('scramble-target');
+        const fx = new TextScramble(el);
+        setTimeout(() => fx.setText('MOHAMED FADEL'), 500);
+
+        const terminalLine = document.getElementById('typer-line');
+        const phrases = [
+            "Scanning network...",
+            "Syncing with the street...",
+            "Analyzing trends...",
+            "Booska-P is the culture.",
+            "Manager: Mohamed Fadel active."
+        ];
+        let i = 0;
+        let j = 0;
+        let currentPhrase = [];
+        let isDeleting = false;
+
+        function loop() {
+            terminalLine.innerHTML = currentPhrase.join('') + '<span style="border-right: 2px solid white"></span>';
+            if (i < phrases.length) {
+                if (!isDeleting && j <= phrases[i].length) {
+                    currentPhrase.push(phrases[i][j]);
+                    j++;
+                }
+                if (isDeleting && j <= phrases[i].length) {
+                    currentPhrase.pop(phrases[i][j]);
+                    j--;
+                }
+                if (j == phrases[i].length) {
+                    isDeleting = true;
+                }
+                if (isDeleting && j == 0) {
+                    currentPhrase = [];
+                    isDeleting = false;
+                    i++;
+                    if (i == phrases.length) i = 0;
+                }
+            }
+            setTimeout(loop, isDeleting ? 50 : 150);
+        }
+        loop();
+
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            document.querySelector('.booska-logo').style.transform = `translateX(${x}px) translateY(${y}px)`;
+            document.querySelector('.fadel-profile').style.boxShadow = `${-x}px ${-y}px 30px rgba(255, 215, 0, 0.1)`;
+        });
     </script>
 </body>
 </html>
